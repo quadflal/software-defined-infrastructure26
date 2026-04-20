@@ -1,0 +1,1 @@
+# Task 20 - Mount point's name specification

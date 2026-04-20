@@ -1,0 +1,1 @@
+# Task 16 - Solving the ~/.ssh/known_hosts quirk

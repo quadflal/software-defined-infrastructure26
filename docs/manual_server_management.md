@@ -1,1 +1,0 @@
-# Manual server management
