@@ -49,10 +49,37 @@ Copyright &copy; 2026 Alex Q and Simon B
 # Read more: https://zensical.org/docs/setup/navigation/
 nav = [
     { "Home" = "index.md" },
-    { "Manual server management" = "manual_server_management.md" },
+    { "Manual server management" = [
+        "manual-server-management/task01.md",
+        "manual-server-management/task02.md",
+        "manual-server-management/task03.md",
+        "manual-server-management/task04.md",
+        "manual-server-management/task05.md",
+        "manual-server-management/task06.md",
+        "manual-server-management/task07.md",
+        "manual-server-management/task08.md",
+        "manual-server-management/task09.md",
+        "manual-server-management/task10.md",
+        "manual-server-management/task11.md",
+        "manual-server-management/task12.md"] },
     { "Cloud provider" = [
-        "cloud/incrementally_creating_a_base_system.md",
-        "cloud/automatic_nginx_installation.md"] },
+        "cloud-provider/task13.md",
+        "cloud-provider/task14.md",
+        "cloud-provider/task15.md",
+        "cloud-provider/task16.md",
+        "cloud-provider/task17.md",
+        "cloud-provider/task18.md",
+        "cloud-provider/task19.md",
+        "cloud-provider/task20.md",
+        "cloud-provider/task21.md",
+        "cloud-provider/task22.md",
+        "cloud-provider/task23.md",
+        "cloud-provider/task24.md",
+        "cloud-provider/task25.md",
+        "cloud-provider/task26.md",
+        "cloud-provider/task27.md",
+        "cloud-provider/task28.md",
+        "cloud-provider/task29.md", ] },
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
