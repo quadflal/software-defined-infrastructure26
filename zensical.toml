@@ -47,7 +47,7 @@ Copyright &copy; 2026 Alex Q and Simon B
 nav = [
     { "Home" = "index.md" },
     { "Manual server management" = "manual_server_management.md" },
-    { "Terraform excercises" = "terraform.md" },
+    { "Cloud provider" = ["cloud/incrementally_creating_a_base_system.md", "cloud/automatic_nginx_installation "] },
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
