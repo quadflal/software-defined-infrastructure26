@@ -1,4 +1,3 @@
-# Tell terraform to use the provider and select a version.
 terraform {
   required_providers {
     hcloud = {
@@ -24,9 +23,9 @@ resource "hcloud_firewall" "sshFw" {
   }
 }
 
-resource "hcloud_ssh_key" "loginUser" {
-  name       = "name"
-  public_key = file("~/.ssh/id_ed25519.pub")
+resource "hcloud_ssh_key" "ssh_key_alex" {
+  name       = "Key-Alex"
+  public_key = var.ssh_key_pub_alex
 }
 
 # Create a server
@@ -35,7 +34,7 @@ resource "hcloud_server" "helloServer" {
   image        =  "debian-13"
   server_type  =  "cx23"
   firewall_ids = [hcloud_firewall.sshFw.id]
-  ssh_keys     = [hcloud_ssh_key.loginUser.id]
+  ssh_keys     = [hcloud_ssh_key.ssh_key_alex.id]
 }
 
 

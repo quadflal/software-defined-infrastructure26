@@ -1,1 +1,2 @@
 hcloud_token = "your_hetzner_cloud_api_token_here"
+ssh_key_pub_alex = "key"
