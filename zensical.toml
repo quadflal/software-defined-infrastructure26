@@ -34,7 +34,7 @@ site_author = "&copy; 2026 Alex Q and Simon B"
 #
 # Read more: https://zensical.org/docs/setup/basics/#copyright
 copyright = """
-Copyright &copy; 2026 026 Alex Q and Simon B
+Copyright &copy; 2026 Alex Q and Simon B
 """
 
 # Zensical supports both implicit navigation and explicitly defined navigation.
@@ -285,6 +285,6 @@ toggle.name = "Switch to light mode"
 # ----------------------------------------------------------------------------
 # The "extra" section contains miscellaneous settings.
 # ----------------------------------------------------------------------------
-#[[project.extra.social]]
-#icon = "fontawesome/brands/github"
-#link = "https://github.com/user/repo"
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/quadflal/software-defined-infrastructure26"
