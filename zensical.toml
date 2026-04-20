@@ -13,6 +13,9 @@
 # Read more: https://zensical.org/docs/setup/basics/#site_name
 site_name = "Software Defined Infrastructure Documentation"
 
+repo_name = "quadflal/software-defined-infrastructure26"
+repo_url = "https://github.com/quadflal/software-defined-infrastructure26"
+
 # The site_description is included in the HTML head and should contain a
 # meaningful description of the site content for use by search engines.
 #
@@ -47,7 +50,9 @@ Copyright &copy; 2026 Alex Q and Simon B
 nav = [
     { "Home" = "index.md" },
     { "Manual server management" = "manual_server_management.md" },
-    { "Cloud provider" = ["cloud/incrementally_creating_a_base_system.md", "cloud/automatic_nginx_installation.md"] },
+    { "Cloud provider" = [
+        "cloud/incrementally_creating_a_base_system.md",
+        "cloud/automatic_nginx_installation.md"] },
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
@@ -200,7 +205,7 @@ features = [
     # When sections are enabled, top-level sections are rendered as groups in
     # the sidebar for viewports above 1220px, but remain as-is on mobile.
     # https://zensical.org/docs/setup/navigation/#navigation-sections
-    "navigation.sections",
+    #"navigation.sections",
     # When tabs are enabled, top-level sections are rendered in a menu layer
     # below the header for viewports above 1220px, but remain as-is on mobile.
     # https://zensical.org/docs/setup/navigation/#navigation-tabs
@@ -233,7 +238,7 @@ features = [
     # always rendered as part of the navigation sidebar on the left.
     # https://zensical.org/docs/setup/navigation/#navigation-integration
     #"toc.integrate",
-    "navigation.tabs"
+    #"navigation.tabs"
 ]
 
 # ----------------------------------------------------------------------------
@@ -283,6 +288,9 @@ toggle.name = "Switch to dark mode"
 scheme = "slate"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
+
+[project.theme.icon]
+repo = "fontawesome/brands/github"
 
 # ----------------------------------------------------------------------------
 # The "extra" section contains miscellaneous settings.
