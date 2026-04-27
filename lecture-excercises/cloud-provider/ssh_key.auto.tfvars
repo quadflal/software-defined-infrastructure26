@@ -1,4 +1,4 @@
 ssh_public_keys = {
   simon = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMqIBPnXc7bGtZk+YUvFYIQg6Hutfn7uvG/OMEvPJ01l"
-  alex   = "XXX"
+  alex   = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILcPFKWOdUSmB2N6vWJ7dApPq/tLvHSOMGU+mjE0qT5a"
 }
