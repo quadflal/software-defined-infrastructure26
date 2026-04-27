@@ -3,7 +3,7 @@ variable "hcloud_token" {
   sensitive = true
 }
 
-variable "ssh_key_pub_alex" {
+variable "ssh_key_pub" {
   nullable  = false
   sensitive = true
 }
