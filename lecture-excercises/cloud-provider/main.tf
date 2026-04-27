@@ -34,8 +34,9 @@ resource "hcloud_firewall" "sshFw" {
 }
 
 resource "hcloud_ssh_key" "ssh_key" {
-  name       = "SSH-Key-2"
-  public_key = var.ssh_key_pub
+  for_each = var.ssh_public_keys
+  name       = each.key
+  public_key = each.value
 }
 # Create a server
 resource "hcloud_server" "helloServer" {
@@ -43,7 +44,9 @@ resource "hcloud_server" "helloServer" {
   image        = "debian-13"
   server_type  = "cx23"
   firewall_ids = [hcloud_firewall.sshFw.id]
-  ssh_keys     = [hcloud_ssh_key.ssh_key.id]
+  ssh_keys = [
+    for key in hcloud_ssh_key.ssh_key : key.id
+  ]
 }
 
 

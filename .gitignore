@@ -222,7 +222,7 @@ crash.*.log
 # Variable files – often contain sensitive data
 *.tfvars
 *.tfvars.json
-
+!ssh_key.auto.tfvars
 # Override files
 override.tf
 override.tf.json
