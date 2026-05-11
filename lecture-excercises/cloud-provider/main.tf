@@ -44,6 +44,7 @@ resource "hcloud_server" "helloServer" {
   image        = "debian-13"
   server_type  = "cx23"
   firewall_ids = [hcloud_firewall.sshFw.id]
+  user_data = file("scripts/init.sh")
   ssh_keys = [
     for key in hcloud_ssh_key.ssh_key : key.id
   ]
