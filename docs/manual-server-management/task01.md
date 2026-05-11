@@ -27,7 +27,7 @@
 
 2. By Hetzner's server GUI. Top right next to »Actions«.
 
-   ![Server Login through Hetzner Console](./assets/task01pic1.png)
+   ![Server Login through Hetzner Console](assets/task01p1.png)
 
    When trying to log in to the server through the hetzner console, you will be asked to enter the username and the
    password for the server.

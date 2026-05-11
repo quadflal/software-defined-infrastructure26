@@ -4,9 +4,11 @@ Re-create your server solving (some of) its security flaws.
 
 1. Create a firewall using the Hetzner GUI containing just a single ICMP inbound access rule.
 
-   [Create a firewall through the Hetzner GUI](./assets/task02pic1.png)
+   ![Create a firewall through the Hetzner GUI](assets/task03p1.png)
 
 2. Transfer your public ssh key to your Hetzner account marking it as “default”.
+
+   ![Add the public ssh keys to the Hetzner account](assets/task03p2.png)
 
 3. Select both your newly created firewall and your ssh key during server creation. The subsequent examples assumes a
    167.235.54.109 server IP.
