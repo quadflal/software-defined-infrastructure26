@@ -4,6 +4,11 @@ terraform {
       source  = "hetznercloud/hcloud"
       version = "1.60.1"
     }
+    external = {
+      source  = "hashicorp/external"
+      version = "2.3.5"
+    }
+
   }
   required_version = "1.14.9"
 
