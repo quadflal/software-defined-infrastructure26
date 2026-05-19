@@ -1,0 +1,62 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+ssh_pwauth: false
+disable_root: true
+
+users:
+  - default
+  - name: devops
+    groups: sudo
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: true
+    ssh_authorized_keys:
+    %{ for key in ssh_public_keys ~}
+    - ${key}
+    %{ endfor ~}
+
+packages:
+  - nginx
+  - fail2ban
+  - python3-systemd
+  - plocate
+
+write_files:
+  - path: /etc/ssh/sshd_config.d/99-hardening.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      PasswordAuthentication no
+      PermitRootLogin no
+      PubkeyAuthentication yes
+
+  - path: /etc/fail2ban/jail.local
+    owner: root:root
+    permissions: "0644"
+    content: |
+      [DEFAULT]
+      bantime = 10m
+      findtime = 10m
+      maxretry = 3
+
+      [sshd]
+      enabled = true
+      backend = systemd
+      port = ssh
+      filter = sshd
+      maxretry = 3
+
+runcmd:
+  - systemctl restart ssh || systemctl restart sshd
+  - systemctl enable nginx
+  - systemctl restart nginx
+  - systemctl enable fail2ban
+  - systemctl restart fail2ban
+  - updatedb
+  - |
+    IP=$(hostname -I | awk '{print $1}')
+    DATE=$(date)
+    echo "I'm Nginx @ \"$IP\" created $DATE" > /var/www/html/index.html

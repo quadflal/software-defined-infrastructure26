@@ -31,6 +31,12 @@ resource "hcloud_firewall" "sshFw" {
     port       = "22"
     source_ips = ["0.0.0.0/0", "::/0"]
   }
+  rule {
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "80"
+    source_ips = ["0.0.0.0/0", "::/0"]
+  }
 }
 
 resource "hcloud_ssh_key" "ssh_key" {
@@ -44,7 +50,9 @@ resource "hcloud_server" "helloServer" {
   image        = "debian-13"
   server_type  = "cx23"
   firewall_ids = [hcloud_firewall.sshFw.id]
-  user_data = file("scripts/init.sh")
+  user_data = templatefile("scripts/cloud-init.yml", {
+    ssh_public_keys = values(var.ssh_public_keys)
+  })
   ssh_keys = [
     for key in hcloud_ssh_key.ssh_key : key.id
   ]
