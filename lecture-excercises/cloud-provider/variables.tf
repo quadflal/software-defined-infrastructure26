@@ -11,12 +11,7 @@ variable "dns_zone" {
   nullable = false
 }
 
-variable "server_name" {
-  type     = string
-  nullable = false
-}
-
-variable "server_aliases" {
+variable "server_names" {
   type     = list(string)
   nullable = false
 }

@@ -1,13 +1,6 @@
-resource "dns_a_record_set" "helloRecord" {
-  zone = "${var.dns_zone}." # The dot matters!
-  name = var.server_name
-  addresses = toset([var.server_ip])
-  ttl = 300
-}
-
-resource "dns_a_record_set" "alias" {
-  for_each  = toset(distinct(var.server_aliases))
-  zone      = "${var.dns_zone}."  # The dot matters!
+resource "dns_a_record_set" "server" {
+  for_each  = toset(concat([""], distinct(var.server_names)))
+  zone      = "${var.dns_zone}." # The dot matters!
   name      = each.value
   addresses = toset([var.server_ip])
   ttl       = 300
@@ -26,17 +19,17 @@ resource "acme_registration" "registration" {
 }
 
 resource "acme_certificate" "wildcard" {
-  account_key_pem =acme_registration.registration.account_key_pem
-  common_name = "g4.sdi.hdm-stuttgart.cloud"
+  account_key_pem = acme_registration.registration.account_key_pem
+  common_name     = var.dns_zone
   subject_alternative_names = [
-    "*.g4.sdi.hdm-stuttgart.cloud"
+    "*.${var.dns_zone}"
   ]
   dns_challenge {
     provider = "rfc2136"
     config = {
       RFC2136_NAMESERVER     = "ns1.hdm-stuttgart.cloud"
       RFC2136_TSIG_ALGORITHM = "hmac-sha512"
-      RFC2136_TSIG_KEY       = "g4.key."
+      RFC2136_TSIG_KEY       = "${split(".", var.dns_zone)[0]}.key."
       RFC2136_TSIG_SECRET    = var.dns_secret
     }
   }

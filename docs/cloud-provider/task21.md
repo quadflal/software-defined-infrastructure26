@@ -212,7 +212,7 @@ sudo certbot --nginx --staging \
   --no-eff-email
 ```
 
-Run only one of these two staging commands. Output placeholder:
+Run only one of these two staging commands. Output:
 
 ```text
 Successfully received certificate.

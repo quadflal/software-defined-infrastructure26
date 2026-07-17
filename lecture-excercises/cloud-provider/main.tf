@@ -25,10 +25,10 @@ provider "hcloud" {
 }
 
 resource "hcloud_volume" "volume01" {
-  name      = "volume01"
-  size      = 10
-  location  = "nbg1"
-  format    = "xfs"
+  name     = "volume01"
+  size     = 10
+  location = "nbg1"
+  format   = "xfs"
 }
 resource "hcloud_volume_attachment" "attach" {
   server_id = module.createHostAmongMetaData.hello_id
@@ -37,29 +37,28 @@ resource "hcloud_volume_attachment" "attach" {
 }
 
 module "createHostAmongMetaData" {
-  source = "../Modules/HostMetaData"
-  name  = "myserver"
-  hcloud_token = var.hcloud_token
+  source          = "../Modules/HostMetaData"
+  name            = "myserver"
+  hcloud_token    = var.hcloud_token
   ssh_public_keys = var.ssh_public_keys
-  volume_name   = hcloud_volume.volume01.name
-  volume_device = hcloud_volume.volume01.linux_device
+  volume_name     = hcloud_volume.volume01.name
+  volume_device   = hcloud_volume.volume01.linux_device
 }
 
 module "createSshKnownHosts" {
-  depends_on = [module.createHostAmongMetaData]
-  source = "../Modules/SshKnownHosts"
-  loginUserName        = module.createHostAmongMetaData.hello_ip_addr
-  serverNameOrIp       = module.createHostAmongMetaData.hello_ip_addr
+  depends_on     = [module.createHostAmongMetaData]
+  source         = "../Modules/SshKnownHosts"
+  loginUserName  = module.createHostAmongMetaData.hello_ip_addr
+  serverNameOrIp = module.createHostAmongMetaData.hello_ip_addr
 }
 
 module "dns" {
   source       = "../Modules/Dns"
   hcloud_token = var.hcloud_token
-  server_ip = module.createHostAmongMetaData.hello_id
-  dns_zone = var.dns_zone
-  server_name = var.server_name
-  server_aliases = var.server_aliases
-  dns_secret = var.dns_secret
+  server_ip    = module.createHostAmongMetaData.hello_ip_addr
+  dns_zone     = var.dns_zone
+  server_names = var.server_names
+  dns_secret   = var.dns_secret
 }
 
 # Create a firewall that allows ssh access to the server
@@ -77,4 +76,15 @@ resource "hcloud_firewall" "sshFw" {
     port       = "80"
     source_ips = ["0.0.0.0/0", "::/0"]
   }
+  rule {
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "443"
+    source_ips = ["0.0.0.0/0", "::/0"]
+  }
+}
+
+resource "hcloud_firewall_attachment" "sshFw" {
+  firewall_id = hcloud_firewall.sshFw.id
+  server_ids  = [module.createHostAmongMetaData.hello_id]
 }

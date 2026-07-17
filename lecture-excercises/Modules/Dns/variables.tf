@@ -14,18 +14,13 @@ variable "dns_zone" {
   nullable = false
 }
 
-variable "server_name" {
-  type     = string
-  nullable = false
-}
-
-variable "server_aliases" {
+variable "server_names" {
   type     = list(string)
   nullable = false
 
   validation {
-    condition = !contains(var.server_aliases, var.server_name)
-    error_message = "The server_aliases must not contain the server_name. Please remove it from the list."
+    condition     = alltrue([for name in var.server_names : name != "" && !strcontains(name, ".")])
+    error_message = "The server_names must contain non-empty DNS labels without dots."
   }
 }
 
