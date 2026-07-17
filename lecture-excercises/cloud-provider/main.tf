@@ -55,7 +55,7 @@ module "createSshKnownHosts" {
 module "dns" {
   source       = "../Modules/Dns"
   hcloud_token = var.hcloud_token
-  server_ip = var.server_ip
+  server_ip = module.createHostAmongMetaData.hello_id
   dns_zone = var.dns_zone
   server_name = var.server_name
   server_aliases = var.server_aliases
