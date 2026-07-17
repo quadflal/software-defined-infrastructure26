@@ -52,6 +52,16 @@ module "createSshKnownHosts" {
   serverNameOrIp       = module.createHostAmongMetaData.hello_ip_addr
 }
 
+module "dns" {
+  source       = "../Modules/Dns"
+  hcloud_token = var.hcloud_token
+  server_ip = var.server_ip
+  dns_zone = var.dns_zone
+  server_name = var.server_name
+  server_aliases = var.server_aliases
+  dns_secret = var.dns_secret
+}
+
 # Create a firewall that allows ssh access to the server
 resource "hcloud_firewall" "sshFw" {
   name = "ssh-firewall-2"
