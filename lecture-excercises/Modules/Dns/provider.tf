@@ -12,22 +12,3 @@ terraform {
     }
   }
 }
-
-# Configure the Hetzner Cloud Provider
-provider "hcloud" {
-  token = var.hcloud_token
-}
-
-provider "dns" {
-  update {
-    server        = "ns1.hdm-stuttgart.cloud"
-    key_name      = local.tsig_key_name
-    key_algorithm = "hmac-sha512"
-    key_secret    = var.dns_secret
-  }
-}
-provider "acme" {
-
-  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
-
-}

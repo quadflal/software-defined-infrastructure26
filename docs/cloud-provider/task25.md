@@ -45,13 +45,11 @@ terraform init
 
 ### 2. Select the Let's Encrypt staging service
 
-The ACME provider configuration in `Modules/Dns/provider.tf` uses the staging directory explicitly:
+The ACME provider configuration in `cloud-provider/main.tf` uses the staging directory explicitly. Keeping provider configurations in the root module allows `Modules/Dns` to be instantiated with `for_each`:
 
 ```terraform
 provider "acme" {
-
   server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
-
 }
 ```
 

@@ -8,6 +8,12 @@ terraform {
       source  = "hashicorp/external"
       version = "2.3.5"
     }
+    dns = {
+      source = "hashicorp/dns"
+    }
+    acme = {
+      source = "vancluever/acme"
+    }
 
   }
 
@@ -22,6 +28,19 @@ terraform {
 # Configure the Hetzner Cloud Provider
 provider "hcloud" {
   token = var.hcloud_token
+}
+
+provider "dns" {
+  update {
+    server        = "ns1.hdm-stuttgart.cloud"
+    key_name      = "${split(".", var.dnsZone)[0]}.key."
+    key_algorithm = "hmac-sha512"
+    key_secret    = var.dns_secret
+  }
+}
+
+provider "acme" {
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
 }
 
 locals {
@@ -70,12 +89,12 @@ module "createSshKnownHosts" {
 module "dns" {
   for_each = toset(local.server_names)
 
-  source         = "../Modules/Dns"
-  hcloud_token   = var.hcloud_token
-  server_ip      = module.createHostAmongMetaData[each.key].hello_ip_addr
-  dns_zone       = var.dnsZone
-  server_name    = each.key
-  dns_secret     = var.dns_secret
+  source       = "../Modules/Dns"
+  hcloud_token = var.hcloud_token
+  server_ip    = module.createHostAmongMetaData[each.key].hello_ip_addr
+  dns_zone     = var.dnsZone
+  server_name  = each.key
+  dns_secret   = var.dns_secret
 }
 
 # Create a firewall that allows ssh access to the server
