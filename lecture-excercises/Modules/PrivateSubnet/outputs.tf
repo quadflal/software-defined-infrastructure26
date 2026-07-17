@@ -1,5 +1,5 @@
 output "gateway_public_ip" {
-  value       = hcloud_server.gateway.ipv4_address
+  value       = hcloud_primary_ip.gateway.ip_address
   description = "Public IPv4 address used to SSH into the gateway"
 }
 

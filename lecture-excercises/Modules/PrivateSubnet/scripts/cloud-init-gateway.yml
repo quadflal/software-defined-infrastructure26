@@ -8,15 +8,9 @@ manage_etc_hosts: true
 hostname: ${hostname}
 fqdn: ${fqdn}
 
-apt:
-  preserve_sources_list: true
-  conf: |
-    Acquire::http::Proxy "${apt_proxy}";
-
 packages:
+  - apt-cacher-ng
   - curl
-  - jq
-  - plocate
 
 users:
   - default
@@ -54,4 +48,12 @@ write_files:
       ff02::2 ip6-allrouters
 
 runcmd:
+  - |
+    if grep -q '^BindAddress:' /etc/apt-cacher-ng/acng.conf; then
+      sed -i 's/^BindAddress:.*/BindAddress: ${gateway_ip}/' /etc/apt-cacher-ng/acng.conf
+    else
+      echo 'BindAddress: ${gateway_ip}' >> /etc/apt-cacher-ng/acng.conf
+    fi
+  - systemctl enable apt-cacher-ng
+  - systemctl restart apt-cacher-ng
   - systemctl restart ssh || systemctl restart sshd
