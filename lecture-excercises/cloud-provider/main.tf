@@ -55,5 +55,12 @@ resource "hcloud_firewall" "sshFw" {
   }
 }
 
+resource "hcloud_volume" "volume01" {
+  name      = "volume1"
+  size      = 10
+  server_id = module.createHostAmongMetaData.hello_id
+  automount = true
+  format    = "xfs"
+}
 
 

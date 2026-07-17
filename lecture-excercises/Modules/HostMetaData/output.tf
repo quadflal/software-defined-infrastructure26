@@ -17,6 +17,9 @@ output "hello_location" {
   description = "The server's datacenter location"
 }
 
-
+output "hello_id" {
+  value = hcloud_server.helloServer.id
+  description = "The servers´s ID"
+}
 
 
