@@ -46,10 +46,10 @@ module "createHostAmongMetaData" {
 }
 
 module "createSshKnownHosts" {
-  depends_on = [module.createHostAmongMetaData]
-  source = "../Modules/SshKnownHosts"
-  loginUserName        = module.createHostAmongMetaData.hello_ip_addr
-  serverNameOrIp       = module.createHostAmongMetaData.hello_ip_addr
+  depends_on = [module.createHostAmongMetaData, module.dns]
+  source     = "../Modules/SshKnownHosts"
+  loginUserName  = module.createHostAmongMetaData.hello_ip_addr
+  serverNameOrIp = "${var.server_name}.${var.dns_zone}"
 }
 
 module "dns" {
@@ -59,7 +59,7 @@ module "dns" {
   dns_zone = var.dns_zone
   server_name = var.server_name
   server_aliases = var.server_aliases
-  dns_secret = var.dns_secret
+  dns_secret   = var.dns_secret
 }
 
 # Create a firewall that allows ssh access to the server
