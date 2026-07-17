@@ -1,0 +1,4 @@
+serverIp      = "ipaddress"
+dnsZone       = "dnsZone"
+serverName    = "serverName"
+serverAliases = ["www", "mail"]
