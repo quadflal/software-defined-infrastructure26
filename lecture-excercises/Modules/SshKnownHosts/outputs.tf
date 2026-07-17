@@ -17,8 +17,8 @@ resource "local_file" "known_hosts_file" {
 
 resource "local_file" "ssh_script" {
   content = templatefile("${path.module}/tpl/ssh.sh", {
-    server_ip = var.serverNameOrIp
-    username  = "devops"
+    server_host = var.serverNameOrIp
+    username    = "devops"
   })
   filename        = "${path.root}/bin/ssh"
   file_permission = "0755"
@@ -26,10 +26,9 @@ resource "local_file" "ssh_script" {
 
 resource "local_file" "scp_script" {
   content = templatefile("${path.module}/tpl/scp.sh", {
-    server_ip = var.serverNameOrIp
-    username  = "devops"
+    server_host = var.serverNameOrIp
+    username    = "devops"
   })
   filename        = "${path.root}/bin/scp"
   file_permission = "0755"
 }
-
