@@ -1,3 +1,8 @@
 dnsZone        = "g4.sdi.hdm-stuttgart.cloud"
 serverBaseName = "work"
 serverCount    = 2
+
+privateSubnet = {
+  dnsDomainName = "intern.g4.hdm-stuttgart.cloud"
+  ipAndNetmask  = "10.0.1.0/24"
+}

@@ -18,3 +18,13 @@ output "hello_id" {
 output "device_string" {
   value = { for name, volume in hcloud_volume.volume : name => volume.linux_device }
 }
+
+output "private_subnet" {
+  value = {
+    gateway_public_ip  = module.privateSubnet.gateway_public_ip
+    gateway_private_ip = module.privateSubnet.gateway_private_ip
+    intern_private_ip  = module.privateSubnet.intern_private_ip
+    gateway_fqdn       = module.privateSubnet.gateway_fqdn
+    intern_fqdn        = module.privateSubnet.intern_fqdn
+  }
+}

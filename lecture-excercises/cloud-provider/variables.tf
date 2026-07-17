@@ -32,3 +32,10 @@ variable "dns_secret" {
   nullable  = false
   sensitive = true
 }
+
+variable "privateSubnet" {
+  type = object({
+    dnsDomainName = string
+    ipAndNetmask  = string
+  })
+}

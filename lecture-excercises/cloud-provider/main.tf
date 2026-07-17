@@ -47,6 +47,13 @@ locals {
   server_names = [for i in range(var.serverCount) : format("%s-%d", var.serverBaseName, i + 1)]
 }
 
+module "privateSubnet" {
+  source = "../Modules/PrivateSubnet"
+
+  private_subnet  = var.privateSubnet
+  ssh_public_keys = var.ssh_public_keys
+}
+
 resource "hcloud_volume" "volume" {
   for_each = toset(local.server_names)
 
