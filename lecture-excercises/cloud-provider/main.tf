@@ -24,11 +24,25 @@ provider "hcloud" {
   token = var.hcloud_token
 }
 
+resource "hcloud_volume" "volume01" {
+  name      = "volume01"
+  size      = 10
+  location  = "nbg1"
+  format    = "xfs"
+}
+resource "hcloud_volume_attachment" "attach" {
+  server_id = module.createHostAmongMetaData.hello_id
+  volume_id = hcloud_volume.volume01.id
+  automount = false
+}
+
 module "createHostAmongMetaData" {
   source = "../Modules/HostMetaData"
   name  = "myserver"
   hcloud_token = var.hcloud_token
   ssh_public_keys = var.ssh_public_keys
+  volume_name   = hcloud_volume.volume01.name
+  volume_device = hcloud_volume.volume01.linux_device
 }
 
 module "createSshKnownHosts" {
@@ -54,13 +68,3 @@ resource "hcloud_firewall" "sshFw" {
     source_ips = ["0.0.0.0/0", "::/0"]
   }
 }
-
-resource "hcloud_volume" "volume01" {
-  name      = "volume1"
-  size      = 10
-  server_id = module.createHostAmongMetaData.hello_id
-  automount = true
-  format    = "xfs"
-}
-
-
