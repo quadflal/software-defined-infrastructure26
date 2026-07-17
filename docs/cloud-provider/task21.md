@@ -68,14 +68,14 @@ Add the A record for the base hostname. The value `10` is the record's time to l
 
 ```text
 > server ns1.hdm-stuttgart.cloud
-> update add g4.sdi.hdm-stuttgart.cloud 10 A <server-ipv4>
+> update add g4.sdi.hdm-stuttgart.cloud 10 A 178.104.204.33
 > send
 ```
 
 Add the second A record for the `www` hostname in the same session:
 
 ```text
-> update add www.g4.sdi.hdm-stuttgart.cloud 10 A <server-ipv4>
+> update add www.g4.sdi.hdm-stuttgart.cloud 10 A 178.104.204.33
 > send
 > quit
 ```
