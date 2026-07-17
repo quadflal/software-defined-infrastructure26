@@ -7,6 +7,9 @@ terraform {
       source  = "hetznercloud/hcloud"
       version = "1.60.1"
     }
+    acme = {
+      source  = "vancluever/acme"
+    }
   }
 }
 
@@ -22,4 +25,9 @@ provider "dns" {
     key_algorithm = "hmac-sha512"
     key_secret    = var.dns_secret
   }
+}
+provider "acme" {
+
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
+
 }
