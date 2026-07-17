@@ -1,4 +1,3 @@
-serverIp      = "ipaddress"
-dnsZone       = "dnsZone"
-serverName    = "serverName"
-serverAliases = ["www", "mail"]
+dns_zone       = "gxy.sdi.hdm-stuttgart.cloud"
+server_name    = "workhorse"
+server_aliases = ["www", "mail"]

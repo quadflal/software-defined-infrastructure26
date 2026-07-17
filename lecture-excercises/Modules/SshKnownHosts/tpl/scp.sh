@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 GEN_DIR=$(dirname "$0")/../gen
 if [ $# -lt 2 ]; then
-   echo usage: .../bin/scp ... ${username}@157.180.78.16 ...
+   echo usage: .../bin/scp ... ${username}@${server_host} ...
 else
    scp -o UserKnownHostsFile="$GEN_DIR/known_hosts" $@
 fi

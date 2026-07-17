@@ -6,11 +6,6 @@ variable "ssh_public_keys" {
   type = map(string)
 }
 
-variable "server_ip" {
-  type     = string
-  nullable = false
-}
-
 variable "dns_zone" {
   type     = string
   nullable = false
