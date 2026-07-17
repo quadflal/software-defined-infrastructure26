@@ -235,3 +235,5 @@ terraform.rc
 
 bin
 gen
+
+/lecture-excercises/pulumi-excercices/sdks
