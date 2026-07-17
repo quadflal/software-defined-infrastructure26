@@ -10,4 +10,5 @@ resource "dns_a_record_set" "alias" {
   zone      = "${var.dns_zone}."  # The dot matters!
   name      = each.value
   addresses = var.server_ip
-  ttl       = 10 }
+  ttl       = 10
+}
