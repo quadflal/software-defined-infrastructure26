@@ -36,10 +36,10 @@ resource "dns_a_record_set" "alias" {
 ``` text
 
 # config.auto.tfvars
-serverIp      = "1.2.3.4"
-dnsZone       = "gxy.sdi.hdm-stuttgart.cloud"
-serverName    = "workhorse"
-serverAliases = ["www", "mail"]
+server_ip      = "1.2.3.4"
+dns_zone       = "gxy.sdi.hdm-stuttgart.cloud"
+server_name    = "workhorse"
+server_aliases = ["www", "mail"]
 
 ```
 
