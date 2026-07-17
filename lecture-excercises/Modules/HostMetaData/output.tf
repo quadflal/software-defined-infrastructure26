@@ -1,7 +1,7 @@
 resource "local_file" "hostdata" {
   content = templatefile("${path.module}/tpl/hostdata.json", {
-    ip4       = hcloud_server.helloServer.ipv4_address,
-    ip6       = hcloud_server.helloServer.ipv6_address,
+    ip4      = hcloud_server.helloServer.ipv4_address,
+    ip6      = hcloud_server.helloServer.ipv6_address,
     location = hcloud_server.helloServer.location
   })
   filename = "${path.root}/gen/${var.name}.json"
@@ -18,7 +18,7 @@ output "hello_location" {
 }
 
 output "hello_id" {
-  value = hcloud_server.helloServer.id
+  value       = hcloud_server.helloServer.id
   description = "The servers´s ID"
 }
 

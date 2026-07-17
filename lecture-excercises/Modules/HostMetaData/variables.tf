@@ -3,15 +3,15 @@ variable "ssh_public_keys" {
 }
 
 variable "name" {
-  type = string
+  type     = string
   nullable = false
 }
 
 variable "hcloud_token" {
-  type = string
+  type     = string
   nullable = false
 }
-variable "volume_name"{
+variable "volume_name" {
   type = string
 }
 

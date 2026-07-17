@@ -1,20 +1,20 @@
 output "hello_ip_addr" {
-  value       = module.createHostAmongMetaData.hello_ip_addr
-  description = "The server's IPv4 address"
+  value       = { for name, server in module.createHostAmongMetaData : name => server.hello_ip_addr }
+  description = "The servers' IPv4 addresses"
 }
 
 output "hello_location" {
-  value       = module.createHostAmongMetaData.hello_location
-  description = "The server's datacenter location"
+  value       = { for name, server in module.createHostAmongMetaData : name => server.hello_location }
+  description = "The servers' datacenter locations"
 }
 
 output "hello_id" {
-  value = module.createHostAmongMetaData.hello_id
-  description = "The servers´s ID"
+  value       = { for name, server in module.createHostAmongMetaData : name => server.hello_id }
+  description = "The servers' IDs"
 }
 
 
 
 output "device_string" {
-  value = hcloud_volume.volume01.linux_device
+  value = { for name, volume in hcloud_volume.volume : name => volume.linux_device }
 }

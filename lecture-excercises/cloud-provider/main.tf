@@ -24,42 +24,58 @@ provider "hcloud" {
   token = var.hcloud_token
 }
 
-resource "hcloud_volume" "volume01" {
-  name      = "volume01"
-  size      = 10
-  location  = "nbg1"
-  format    = "xfs"
+locals {
+  server_names = [for i in range(var.serverCount) : format("%s-%d", var.serverBaseName, i + 1)]
 }
+
+resource "hcloud_volume" "volume" {
+  for_each = toset(local.server_names)
+
+  name     = "${each.key}-volume"
+  size     = 10
+  location = "nbg1"
+  format   = "xfs"
+}
+
 resource "hcloud_volume_attachment" "attach" {
-  server_id = module.createHostAmongMetaData.hello_id
-  volume_id = hcloud_volume.volume01.id
+  for_each = toset(local.server_names)
+
+  server_id = module.createHostAmongMetaData[each.key].hello_id
+  volume_id = hcloud_volume.volume[each.key].id
   automount = false
 }
 
 module "createHostAmongMetaData" {
-  source = "../Modules/HostMetaData"
-  name  = "myserver"
-  hcloud_token = var.hcloud_token
+  for_each = toset(local.server_names)
+
+  source          = "../Modules/HostMetaData"
+  name            = each.key
+  hcloud_token    = var.hcloud_token
   ssh_public_keys = var.ssh_public_keys
-  volume_name   = hcloud_volume.volume01.name
-  volume_device = hcloud_volume.volume01.linux_device
+  volume_name     = hcloud_volume.volume[each.key].name
+  volume_device   = hcloud_volume.volume[each.key].linux_device
 }
 
 module "createSshKnownHosts" {
+  for_each = toset(local.server_names)
+
   depends_on = [module.createHostAmongMetaData, module.dns]
   source     = "../Modules/SshKnownHosts"
-  loginUserName  = module.createHostAmongMetaData.hello_ip_addr
-  serverNameOrIp = "${var.server_name}.${var.dns_zone}"
+
+  loginUserName  = module.createHostAmongMetaData[each.key].hello_ip_addr
+  serverNameOrIp = "${each.key}.${var.dnsZone}"
+  targetDir      = each.key
 }
 
 module "dns" {
-  source       = "../Modules/Dns"
-  hcloud_token = var.hcloud_token
-  server_ip = module.createHostAmongMetaData.hello_id
-  dns_zone = var.dns_zone
-  server_name = var.server_name
-  server_aliases = var.server_aliases
-  dns_secret   = var.dns_secret
+  for_each = toset(local.server_names)
+
+  source         = "../Modules/Dns"
+  hcloud_token   = var.hcloud_token
+  server_ip      = module.createHostAmongMetaData[each.key].hello_ip_addr
+  dns_zone       = var.dnsZone
+  server_name    = each.key
+  dns_secret     = var.dns_secret
 }
 
 # Create a firewall that allows ssh access to the server

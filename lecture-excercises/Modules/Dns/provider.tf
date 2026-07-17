@@ -8,20 +8,20 @@ terraform {
       version = "1.60.1"
     }
     acme = {
-      source  = "vancluever/acme"
+      source = "vancluever/acme"
     }
   }
 }
 
 # Configure the Hetzner Cloud Provider
 provider "hcloud" {
-token = var.hcloud_token
+  token = var.hcloud_token
 }
 
 provider "dns" {
   update {
     server        = "ns1.hdm-stuttgart.cloud"
-    key_name      = "g4.key."  # Corresponding to your group e.g., Group 12
+    key_name      = local.tsig_key_name
     key_algorithm = "hmac-sha512"
     key_secret    = var.dns_secret
   }

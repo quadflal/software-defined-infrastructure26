@@ -19,16 +19,6 @@ variable "server_name" {
   nullable = false
 }
 
-variable "server_aliases" {
-  type     = list(string)
-  nullable = false
-
-  validation {
-    condition = !contains(var.server_aliases, var.server_name)
-    error_message = "The server_aliases must not contain the server_name. Please remove it from the list."
-  }
-}
-
 variable "dns_secret" {
   type      = string
   nullable  = false
