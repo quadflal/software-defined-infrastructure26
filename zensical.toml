@@ -49,19 +49,6 @@ Copyright &copy; 2026 Alex Q and Simon B
 # Read more: https://zensical.org/docs/setup/navigation/
 nav = [
     { "Home" = "index.md" },
-    { "Manual server management" = [
-        "manual-server-management/task01.md",
-        "manual-server-management/task02.md",
-        "manual-server-management/task03.md",
-        "manual-server-management/task04.md",
-        "manual-server-management/task05.md",
-        "manual-server-management/task06.md",
-        "manual-server-management/task07.md",
-        "manual-server-management/task08.md",
-        "manual-server-management/task09.md",
-        "manual-server-management/task10.md",
-        "manual-server-management/task11.md",
-        "manual-server-management/task12.md"] },
     { "Cloud provider" = [
         "cloud-provider/task13.md",
         "cloud-provider/task14.md",
@@ -79,7 +66,11 @@ nav = [
         "cloud-provider/task26.md",
         "cloud-provider/task27.md",
         "cloud-provider/task28.md",
-        "cloud-provider/task29.md", ] },
+        "cloud-provider/task29.md",
+        "cloud-provider/task30.md",
+        "cloud-provider/task31.md",
+        "cloud-provider/task32.md"
+        ] },
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
