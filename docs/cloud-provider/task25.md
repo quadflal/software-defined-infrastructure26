@@ -103,17 +103,17 @@ The certificate resource in `Modules/Dns/main.tf` is:
 
 ```terraform
 resource "acme_certificate" "wildcard" {
-  account_key_pem =acme_registration.registration.account_key_pem
-  common_name = "g4.sdi.hdm-stuttgart.cloud"
+  account_key_pem = acme_registration.registration.account_key_pem
+  common_name     = var.dns_zone
   subject_alternative_names = [
-    "*.g4.sdi.hdm-stuttgart.cloud"
+    "*.${var.dns_zone}"
   ]
   dns_challenge {
     provider = "rfc2136"
     config = {
       RFC2136_NAMESERVER     = "ns1.hdm-stuttgart.cloud"
       RFC2136_TSIG_ALGORITHM = "hmac-sha512"
-      RFC2136_TSIG_KEY       = "g4.key."
+      RFC2136_TSIG_KEY       = "${split(".", var.dns_zone)[0]}.key."
       RFC2136_TSIG_SECRET    = var.dns_secret
     }
   }
@@ -122,8 +122,8 @@ resource "acme_certificate" "wildcard" {
 
 The requested certificate covers both required name patterns:
 
-- `common_name` covers the zone apex `g4.sdi.hdm-stuttgart.cloud`.
-- `subject_alternative_names` covers `*.g4.sdi.hdm-stuttgart.cloud`, including hosts such as `www.g4.sdi.hdm-stuttgart.cloud` and `mail.g4.sdi.hdm-stuttgart.cloud`.
+- `common_name` covers the zone apex supplied through `var.dns_zone`.
+- `subject_alternative_names` covers the corresponding wildcard, including hosts such as `www` and `mail` beneath that zone.
 
 A wildcard name does not cover the zone apex, so both entries are necessary.
 
@@ -142,7 +142,7 @@ resource "local_sensitive_file" "private_key" {
 
 resource "local_file" "certificate" {
   filename        = "${path.root}/gen/certificate.pem"
-  content         = acme_certificate.wildcard.certificate_pem
+  content         = "${acme_certificate.wildcard.certificate_pem}${acme_certificate.wildcard.issuer_pem}"
   file_permission = "0644"
 }
 ```
@@ -155,7 +155,7 @@ cloud-provider/gen/
 └── private.pem
 ```
 
-The private key uses `local_sensitive_file` and permission mode `0600`, limiting access to its owner. The certificate is public material and uses permission mode `0644`.
+The private key uses `local_sensitive_file` and permission mode `0600`, limiting access to its owner. The certificate is public material and uses permission mode `0644`. Concatenating `certificate_pem` and `issuer_pem` produces the certificate chain expected by the later Nginx configuration.
 
 References to `acme_certificate.wildcard` make both files depend implicitly on successful certificate issuance.
 

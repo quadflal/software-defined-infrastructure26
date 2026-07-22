@@ -119,4 +119,15 @@ resource "hcloud_firewall" "sshFw" {
     port       = "80"
     source_ips = ["0.0.0.0/0", "::/0"]
   }
+  rule {
+    direction  = "in"
+    protocol   = "tcp"
+    port       = "443"
+    source_ips = ["0.0.0.0/0", "::/0"]
+  }
+}
+
+resource "hcloud_firewall_attachment" "sshFw" {
+  firewall_id = hcloud_firewall.sshFw.id
+  server_ids  = [module.createHostAmongMetaData.hello_id]
 }

@@ -14,9 +14,14 @@ variable "dns_zone" {
   nullable = false
 }
 
-variable "server_name" {
-  type     = string
+variable "server_names" {
+  type     = list(string)
   nullable = false
+
+  validation {
+    condition     = alltrue([for name in var.server_names : name != "" && !strcontains(name, ".")])
+    error_message = "The server_names must contain non-empty DNS labels without dots."
+  }
 }
 
 variable "dns_secret" {

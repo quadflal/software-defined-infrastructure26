@@ -19,10 +19,10 @@ The volume resource in `cloud-provider/main.tf` no longer contains a `server_id`
 
 ```terraform
 resource "hcloud_volume" "volume01" {
-  name      = "volume01"
-  size      = 10
-  location  = "nbg1"
-  format    = "xfs"
+  name     = "volume01"
+  size     = 10
+  location = "nbg1"
+  format   = "xfs"
 }
 ```
 
@@ -48,12 +48,12 @@ The current module call in `cloud-provider/main.tf` passes the volume's name and
 
 ```terraform
 module "createHostAmongMetaData" {
-  source = "../Modules/HostMetaData"
-  name  = "myserver"
-  hcloud_token = var.hcloud_token
+  source          = "../Modules/HostMetaData"
+  name            = "myserver"
+  hcloud_token    = var.hcloud_token
   ssh_public_keys = var.ssh_public_keys
-  volume_name   = hcloud_volume.volume01.name
-  volume_device = hcloud_volume.volume01.linux_device
+  volume_name     = hcloud_volume.volume01.name
+  volume_device   = hcloud_volume.volume01.linux_device
 }
 ```
 

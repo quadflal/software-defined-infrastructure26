@@ -6,6 +6,6 @@ resource "local_sensitive_file" "private_key" {
 
 resource "local_file" "certificate" {
   filename        = "${path.root}/gen/certificate.pem"
-  content         = acme_certificate.wildcard.certificate_pem
+  content         = "${acme_certificate.wildcard.certificate_pem}${acme_certificate.wildcard.issuer_pem}"
   file_permission = "0644"
 }
