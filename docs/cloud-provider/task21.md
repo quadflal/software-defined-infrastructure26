@@ -53,7 +53,7 @@ Email:        sb322@hdm-stuttgart.de
 Export the supplied TSIG key as an environment variable. Replace the placeholders with the assigned key name and secret:
 
 ```bash
-export HMAC='hmac-sha512:<key-name>:<key-secret>'
+export HMAC='hmac-sha512:g4.key.:<key-secret>'
 ```
 
 > **Security note:** The HMAC value grants permission to update DNS records. Do not add the real value to the repository, documentation, or shell history. Clear the variable with `unset HMAC` after completing the updates.

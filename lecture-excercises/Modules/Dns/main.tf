@@ -3,9 +3,11 @@ locals {
 }
 
 resource "dns_a_record_set" "helloRecord" {
+  for_each = var.server_addresses
+
   zone      = "${var.dns_zone}." # The dot matters!
-  name      = var.server_name
-  addresses = toset([var.server_ip])
+  name      = each.key
+  addresses = toset([each.value])
   ttl       = 300
 }
 

@@ -1,9 +1,3 @@
-resource "hcloud_ssh_key" "ssh_key" {
-  for_each   = var.ssh_public_keys
-  name       = each.key
-  public_key = each.value
-}
-
 resource "hcloud_server" "helloServer" {
   name        = var.name
   image       = "debian-13"

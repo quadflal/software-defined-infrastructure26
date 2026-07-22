@@ -47,6 +47,13 @@ locals {
   server_names = [for i in range(var.serverCount) : format("%s-%d", var.serverBaseName, i + 1)]
 }
 
+resource "hcloud_ssh_key" "ssh_key" {
+  for_each = var.ssh_public_keys
+
+  name       = each.key
+  public_key = each.value
+}
+
 module "privateSubnet" {
   source = "../Modules/PrivateSubnet"
 
@@ -94,14 +101,13 @@ module "createSshKnownHosts" {
 }
 
 module "dns" {
-  for_each = toset(local.server_names)
+  source = "../Modules/Dns"
 
-  source       = "../Modules/Dns"
-  hcloud_token = var.hcloud_token
-  server_ip    = module.createHostAmongMetaData[each.key].hello_ip_addr
-  dns_zone     = var.dnsZone
-  server_name  = each.key
-  dns_secret   = var.dns_secret
+  server_addresses = {
+    for name in local.server_names : name => module.createHostAmongMetaData[name].hello_ip_addr
+  }
+  dns_zone   = var.dnsZone
+  dns_secret = var.dns_secret
 }
 
 # Create a firewall that allows ssh access to the server
@@ -129,5 +135,5 @@ resource "hcloud_firewall" "sshFw" {
 
 resource "hcloud_firewall_attachment" "sshFw" {
   firewall_id = hcloud_firewall.sshFw.id
-  server_ids  = [module.createHostAmongMetaData.hello_id]
+  server_ids  = [for server in module.createHostAmongMetaData : server.hello_id]
 }

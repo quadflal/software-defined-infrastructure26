@@ -199,7 +199,7 @@ Connect through the SSH wrapper:
 Copy a file through the SCP wrapper:
 
 ```bash
-./bin/scp test.txt devops@<server-ip>:/tmp
+./bin/scp test.txt devops@178.104.204.33:/tmp
 ```
 
 ## Result
