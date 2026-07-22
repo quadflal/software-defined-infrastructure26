@@ -279,7 +279,7 @@ The readiness hook is intentionally narrow. It does not configure the gateway; C
 
 ## Validation
 
-Only static Terraform validation was performed:
+When Task 29 was initially implemented, only static Terraform validation was performed:
 
 ```bash
 terraform validate
@@ -291,11 +291,11 @@ Result:
 Success! The configuration is valid.
 ```
 
-No `terraform plan`, `terraform apply`, SSH command, package installation, or proxy request was run while implementing the task.
+The infrastructure was applied later. The live verification below was recorded from that deployed environment.
 
 ## Verification after applying
 
-The following commands are documentation placeholders for a later live test.
+The following commands were verified against the deployed infrastructure.
 
 ### Verify the primary IP
 
@@ -303,10 +303,10 @@ The following commands are documentation placeholders for a later live test.
 terraform output private_subnet
 ```
 
-Output placeholder:
+Output:
 
 ```text
-gateway_public_ip = "<managed-primary-ipv4>"
+gateway_public_ip = "88.99.224.53"
 gateway_private_ip = "10.0.1.2"
 intern_private_ip = "10.0.1.3"
 ```
@@ -314,18 +314,18 @@ intern_private_ip = "10.0.1.3"
 ### Verify the gateway service
 
 ```bash
-ssh devops@<managed-primary-ipv4>
+ssh devops@88.99.224.53
 sudo systemctl status apt-cacher-ng --no-pager
 sudo ss -ltnp | grep 3142
 curl -I http://10.0.1.2:3142/acng-report.html
 ```
 
-Output placeholders:
+Output:
 
 ```text
 Active: active (running)
 LISTEN ... 10.0.1.2:3142 ... apt-cacher-ng
-HTTP/1.1 <status-code> <status-text>
+HTTP/1.1 200 OK
 ```
 
 The listener output must show `10.0.1.2:3142`, not `0.0.0.0:3142` or the public primary address.
@@ -333,7 +333,7 @@ The listener output must show `10.0.1.2:3142`, not `0.0.0.0:3142` or the public 
 ### Verify intern through chained SSH
 
 ```bash
-ssh -J devops@<managed-primary-ipv4> devops@10.0.1.3
+ssh -J devops@88.99.224.53 devops@10.0.1.3
 ```
 
 Inspect the rendered proxy setting:
@@ -354,12 +354,12 @@ Verify the supplementary packages:
 dpkg-query -W curl jq plocate
 ```
 
-Output placeholder:
+Output:
 
 ```text
-curl    <version>
-jq      <version>
-plocate <version>
+curl    8.14.1-2+deb13u4
+jq      1.7.1-6+deb13u2
+plocate 1.1.23-1
 ```
 
 Finally, update package metadata again and observe the gateway cache logs:
@@ -374,10 +374,13 @@ On the gateway:
 sudo tail -n 50 /var/log/apt-cacher-ng/apt-cacher.log
 ```
 
-Output placeholder:
+Output excerpt:
 
 ```text
-<cached repository requests originating from 10.0.1.3>
+1784749640|I|165862|10.0.1.3|debrep/pool/main/j/jq/libjq1_1.7.1-6+deb13u2_amd64.deb
+1784749640|O|164623|10.0.1.3|debrep/pool/main/j/jq/libjq1_1.7.1-6+deb13u2_amd64.deb
+1784749640|I|145838|10.0.1.3|debrep/pool/main/p/plocate/plocate_1.1.23-1_amd64.deb
+1784749640|O|144598|10.0.1.3|debrep/pool/main/p/plocate/plocate_1.1.23-1_amd64.deb
 ```
 
 ## Result

@@ -174,10 +174,10 @@ Expected structure:
 ```json
 {
   "network": {
-    "ipv4": "<server-ipv4>",
-    "ipv6": "<server-ipv6>"
+    "ipv4": "178.104.204.33",
+    "ipv6": "2a01:4f8:c2c:e7cf::1"
   },
-  "location": "<server-location>"
+  "location": "nbg1"
 }
 ```
 

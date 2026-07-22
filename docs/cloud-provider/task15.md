@@ -122,24 +122,24 @@ After apply the following tests can be used to check the config:
 1. Test the web server.
 
 ```bash
-curl http://<server-ip>
+curl http://178.104.204.33
 ```
 Expected output:
 
 ```text
-I'm Nginx @ "<server-ip>" created <date>
+I'm Nginx @ "178.104.204.33" created <date>
 ```
 
 2. Test the `devops` SSH login.
 
 ```bash
-ssh devops@<server-ip>
+ssh devops@178.104.204.33
 ```
 
 3. Test that root login is disabled.
 
 ```bash
-ssh root@<server-ip>
+ssh root@178.104.204.33
 ```
 
 Expected result:

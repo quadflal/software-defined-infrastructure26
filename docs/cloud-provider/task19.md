@@ -61,13 +61,13 @@ terraform apply
 The output has the following form:
 
 ```text
-device_string = "/dev/disk/by-id/scsi-0HC_Volume_<volume-id>"
+device_string = "/dev/disk/by-id/scsi-0HC_Volume_106439879"
 ```
 
 Unlike a name such as `/dev/sdb`, this path contains Hetzner's volume ID and remains stable if Linux assigns a different device name after a reboot. It is a symbolic link to the current block device. The relationship can be verified on the server with:
 
 ```bash
-readlink -f /dev/disk/by-id/scsi-0HC_Volume_<volume-id>
+readlink -f /dev/disk/by-id/scsi-0HC_Volume_106439879
 ```
 
 Expected result for this setup:

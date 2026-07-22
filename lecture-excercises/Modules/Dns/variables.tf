@@ -1,26 +1,18 @@
-variable "hcloud_token" {
-  type      = string
-  nullable  = false
-  sensitive = true
-}
-
-variable "server_ip" {
-  type     = string
-  nullable = false
-}
-
 variable "dns_zone" {
   type     = string
   nullable = false
 }
 
-variable "server_names" {
-  type     = list(string)
+variable "server_addresses" {
+  type     = map(string)
   nullable = false
 
   validation {
-    condition     = alltrue([for name in var.server_names : name != "" && !strcontains(name, ".")])
-    error_message = "The server_names must contain non-empty DNS labels without dots."
+    condition = alltrue([
+      for name, address in var.server_addresses :
+      name != "" && !strcontains(name, ".") && can(cidrnetmask("${address}/32"))
+    ])
+    error_message = "server_addresses must map non-empty DNS labels without dots to valid IPv4 addresses."
   }
 }
 

@@ -6,7 +6,7 @@
 - Place the server and volume in the same Hetzner Cloud location.
 - Attach the volume with an `hcloud_volume_attachment` resource and disable provider-managed automounting.
 - Pass the volume name and stable Linux device path to the Cloud-init template.
-- Create a predictable mount point instead of using `/mnt/HC_Volume_<volume-id>`.
+- Create a predictable mount point instead of using `/mnt/HC_Volume_106439879`.
 - Add the volume to `/etc/fstab` and mount it during Cloud-init.
 
 The mount point is derived directly from the Terraform volume name. Naming the volume `volume01` therefore creates the required `/volume01` mount point.
@@ -126,7 +126,7 @@ These commands perform the following operations:
 With the volume name `volume01`, the rendered commands create `/volume01` and append an entry with this structure:
 
 ```fstab
-/dev/disk/by-id/scsi-0HC_Volume_<volume-id> /volume01 xfs defaults,nofail,discard 0 2
+/dev/disk/by-id/scsi-0HC_Volume_106439879 /volume01 xfs defaults,nofail,discard 0 2
 ```
 
 The `nofail` option allows the server to continue booting if the additional volume is temporarily unavailable. The `discard` option enables discard operations for storage blocks that are no longer in use.
@@ -168,4 +168,4 @@ sudo reboot
 
 The server and volume are created as separate resources in the same `nbg1` location. Terraform passes the volume name and stable Linux device path into the server's Cloud-init configuration, while `hcloud_volume_attachment` connects the two resources without provider-managed automounting.
 
-Cloud-init creates `/volume01`, adds the XFS volume to `/etc/fstab`, reloads systemd, and processes the new mount entry with `mount -a`. This replaces Hetzner's generated `/mnt/HC_Volume_<volume-id>` path with a predictable mount point that persists across reboots.
+Cloud-init creates `/volume01`, adds the XFS volume to `/etc/fstab`, reloads systemd, and processes the new mount entry with `mount -a`. This replaces Hetzner's generated `/mnt/HC_Volume_106439879` path with a predictable mount point that persists across reboots.

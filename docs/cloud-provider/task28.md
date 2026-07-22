@@ -339,13 +339,13 @@ No `terraform plan` or `terraform apply` was executed while implementing this ta
 terraform output private_subnet
 ```
 
-Output placeholder:
+Output:
 
 ```text
 {
   "gateway_fqdn" = "gateway.intern.g4.hdm-stuttgart.cloud"
   "gateway_private_ip" = "10.0.1.2"
-  "gateway_public_ip" = "<gateway-public-ipv4>"
+  "gateway_public_ip" = "88.99.224.53"
   "intern_fqdn" = "intern.intern.g4.hdm-stuttgart.cloud"
   "intern_private_ip" = "10.0.1.3"
 }
@@ -354,7 +354,7 @@ Output placeholder:
 ### Connect to the gateway
 
 ```bash
-ssh devops@<gateway-public-ipv4>
+ssh devops@88.99.224.53
 ```
 
 On the gateway, inspect both interfaces and local names:
@@ -366,14 +366,14 @@ getent hosts intern
 ping -c 3 intern
 ```
 
-Output placeholders:
+Output:
 
 ```text
-<public interface and address>
-<private interface with 10.0.1.2/32 or provider-managed prefix>
+eth0             UP             88.99.224.53/32 fe80::b227:44eb:4f07:22de/64
+enp7s0           UP             10.0.1.2/32 fe80::8400:ff:fe41:d5e2/64
 10.0.1.2 gateway.intern.g4.hdm-stuttgart.cloud gateway
 10.0.1.3 intern.intern.g4.hdm-stuttgart.cloud intern
-<successful ping output>
+3 packets transmitted, 3 received, 0% packet loss
 ```
 
 ### Connect through the gateway
@@ -381,7 +381,7 @@ Output placeholders:
 From the local workstation, use OpenSSH ProxyJump. The local SSH agent/key authenticates to both hosts; no private key is copied to the gateway:
 
 ```bash
-ssh -J devops@<gateway-public-ipv4> devops@10.0.1.3
+ssh -J devops@88.99.224.53 devops@10.0.1.3
 ```
 
 The local FQDN can also be used as the final destination only after connecting through the gateway's resolver context. The fixed private IP is therefore the simplest ProxyJump target.
@@ -389,7 +389,7 @@ The local FQDN can also be used as the final destination only after connecting t
 Alternatively, connect to the gateway with agent forwarding and then start the second SSH connection:
 
 ```bash
-ssh -A devops@<gateway-public-ipv4>
+ssh -A devops@88.99.224.53
 ssh devops@intern
 ```
 
@@ -402,12 +402,12 @@ getent hosts gateway
 getent hosts intern
 ```
 
-Output placeholders:
+Output:
 
 ```text
 intern.intern.g4.hdm-stuttgart.cloud
-<loopback interface>
-<private interface with 10.0.1.3/32 or provider-managed prefix>
+lo               UNKNOWN        127.0.0.1/8 ::1/128
+enp7s0           UP             10.0.1.3/32 fe80::8400:ff:fe41:d5aa/64
 10.0.1.2 gateway.intern.g4.hdm-stuttgart.cloud gateway
 10.0.1.3 intern.intern.g4.hdm-stuttgart.cloud intern
 ```

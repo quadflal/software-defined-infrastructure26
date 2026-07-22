@@ -137,12 +137,12 @@ The HTTPS firewall rule in `cloud-provider/main.tf` is:
   }
 ```
 
-The firewall is attached to the modular server through:
+The firewall is attached to all modular servers through:
 
 ```terraform
 resource "hcloud_firewall_attachment" "sshFw" {
   firewall_id = hcloud_firewall.sshFw.id
-  server_ids  = [module.createHostAmongMetaData.hello_id]
+  server_ids  = [for server in module.createHostAmongMetaData : server.hello_id]
 }
 ```
 
@@ -209,7 +209,7 @@ X509v3 Subject Alternative Name:
 Copy both generated files into the server's temporary directory:
 
 ```bash
-./bin/scp gen/certificate.pem gen/private.pem devops@<server-ipv4>:/tmp/
+./bin/scp gen/certificate.pem gen/private.pem devops@178.104.204.33:/tmp/
 ```
 
 Output:
@@ -370,7 +370,7 @@ Keeping the committed configuration on staging prevents an accidental future pro
 Copy the newly generated files to the server again:
 
 ```bash
-./bin/scp gen/certificate.pem gen/private.pem devops@<server-ipv4>:/tmp/
+./bin/scp gen/certificate.pem gen/private.pem devops@178.104.204.33:/tmp/
 ./bin/ssh
 sudo install -o root -g root -m 0644 /tmp/certificate.pem /etc/nginx/ssl/certificate.pem
 sudo install -o root -g root -m 0600 /tmp/private.pem /etc/nginx/ssl/private.pem
