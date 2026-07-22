@@ -1,0 +1,59 @@
+#cloud-config
+
+package_update: true
+package_upgrade: true
+ssh_pwauth: false
+disable_root: true
+manage_etc_hosts: true
+hostname: ${hostname}
+fqdn: ${fqdn}
+
+packages:
+  - apt-cacher-ng
+  - curl
+
+users:
+  - default
+  - name: devops
+    groups: sudo
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: true
+    ssh_authorized_keys:
+    %{ for key in ssh_public_keys ~}
+      - ${key}
+    %{ endfor ~}
+
+write_files:
+  - path: /etc/ssh/sshd_config.d/99-hardening.conf
+    owner: root:root
+    permissions: "0644"
+    content: |
+      PasswordAuthentication no
+      PermitRootLogin no
+      PubkeyAuthentication yes
+
+  - path: /etc/cloud/templates/hosts.debian.tmpl
+    owner: root:root
+    permissions: "0644"
+    content: |
+      127.0.1.1 {{fqdn}} {{hostname}}
+      127.0.0.1 localhost
+
+      ${gateway_ip} ${gateway_fqdn} gateway
+      ${intern_ip} ${intern_fqdn} intern
+
+      ::1 localhost ip6-localhost ip6-loopback
+      ff02::1 ip6-allnodes
+      ff02::2 ip6-allrouters
+
+runcmd:
+  - |
+    if grep -q '^BindAddress:' /etc/apt-cacher-ng/acng.conf; then
+      sed -i 's/^BindAddress:.*/BindAddress: ${gateway_ip}/' /etc/apt-cacher-ng/acng.conf
+    else
+      echo 'BindAddress: ${gateway_ip}' >> /etc/apt-cacher-ng/acng.conf
+    fi
+  - systemctl enable apt-cacher-ng
+  - systemctl restart apt-cacher-ng
+  - systemctl restart ssh || systemctl restart sshd

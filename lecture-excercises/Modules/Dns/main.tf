@@ -1,7 +1,10 @@
-resource "dns_a_record_set" "server" {
-  for_each  = toset(concat([""], distinct(var.server_names)))
+locals {
+  tsig_key_name = "${split(".", var.dns_zone)[0]}.key."
+}
+
+resource "dns_a_record_set" "helloRecord" {
   zone      = "${var.dns_zone}." # The dot matters!
-  name      = each.value
+  name      = var.server_name
   addresses = toset([var.server_ip])
   ttl       = 300
 }
@@ -29,7 +32,7 @@ resource "acme_certificate" "wildcard" {
     config = {
       RFC2136_NAMESERVER     = "ns1.hdm-stuttgart.cloud"
       RFC2136_TSIG_ALGORITHM = "hmac-sha512"
-      RFC2136_TSIG_KEY       = "${split(".", var.dns_zone)[0]}.key."
+      RFC2136_TSIG_KEY       = local.tsig_key_name
       RFC2136_TSIG_SECRET    = var.dns_secret
     }
   }

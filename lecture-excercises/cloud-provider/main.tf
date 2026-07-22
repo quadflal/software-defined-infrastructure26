@@ -8,6 +8,12 @@ terraform {
       source  = "hashicorp/external"
       version = "2.3.5"
     }
+    dns = {
+      source = "hashicorp/dns"
+    }
+    acme = {
+      source = "vancluever/acme"
+    }
 
   }
 
@@ -24,40 +30,77 @@ provider "hcloud" {
   token = var.hcloud_token
 }
 
-resource "hcloud_volume" "volume01" {
-  name     = "volume01"
+provider "dns" {
+  update {
+    server        = "ns1.hdm-stuttgart.cloud"
+    key_name      = "${split(".", var.dnsZone)[0]}.key."
+    key_algorithm = "hmac-sha512"
+    key_secret    = var.dns_secret
+  }
+}
+
+provider "acme" {
+  server_url = "https://acme-staging-v02.api.letsencrypt.org/directory"
+}
+
+locals {
+  server_names = [for i in range(var.serverCount) : format("%s-%d", var.serverBaseName, i + 1)]
+}
+
+module "privateSubnet" {
+  source = "../Modules/PrivateSubnet"
+
+  private_subnet  = var.privateSubnet
+  ssh_public_keys = var.ssh_public_keys
+}
+
+resource "hcloud_volume" "volume" {
+  for_each = toset(local.server_names)
+
+  name     = "${each.key}-volume"
   size     = 10
   location = "nbg1"
   format   = "xfs"
 }
+
 resource "hcloud_volume_attachment" "attach" {
-  server_id = module.createHostAmongMetaData.hello_id
-  volume_id = hcloud_volume.volume01.id
+  for_each = toset(local.server_names)
+
+  server_id = module.createHostAmongMetaData[each.key].hello_id
+  volume_id = hcloud_volume.volume[each.key].id
   automount = false
 }
 
 module "createHostAmongMetaData" {
+  for_each = toset(local.server_names)
+
   source          = "../Modules/HostMetaData"
-  name            = "myserver"
+  name            = each.key
   hcloud_token    = var.hcloud_token
   ssh_public_keys = var.ssh_public_keys
-  volume_name     = hcloud_volume.volume01.name
-  volume_device   = hcloud_volume.volume01.linux_device
+  volume_name     = hcloud_volume.volume[each.key].name
+  volume_device   = hcloud_volume.volume[each.key].linux_device
 }
 
 module "createSshKnownHosts" {
-  depends_on     = [module.createHostAmongMetaData]
-  source         = "../Modules/SshKnownHosts"
-  loginUserName  = module.createHostAmongMetaData.hello_ip_addr
-  serverNameOrIp = module.createHostAmongMetaData.hello_ip_addr
+  for_each = toset(local.server_names)
+
+  depends_on = [module.createHostAmongMetaData, module.dns]
+  source     = "../Modules/SshKnownHosts"
+
+  loginUserName  = module.createHostAmongMetaData[each.key].hello_ip_addr
+  serverNameOrIp = "${each.key}.${var.dnsZone}"
+  targetDir      = each.key
 }
 
 module "dns" {
+  for_each = toset(local.server_names)
+
   source       = "../Modules/Dns"
   hcloud_token = var.hcloud_token
-  server_ip    = module.createHostAmongMetaData.hello_ip_addr
-  dns_zone     = var.dns_zone
-  server_names = var.server_names
+  server_ip    = module.createHostAmongMetaData[each.key].hello_ip_addr
+  dns_zone     = var.dnsZone
+  server_name  = each.key
   dns_secret   = var.dns_secret
 }
 

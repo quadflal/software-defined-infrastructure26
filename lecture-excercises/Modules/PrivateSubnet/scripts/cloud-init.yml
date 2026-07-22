@@ -2,9 +2,21 @@
 
 package_update: true
 package_upgrade: true
-package_reboot_if_required: true
 ssh_pwauth: false
 disable_root: true
+manage_etc_hosts: true
+hostname: ${hostname}
+fqdn: ${fqdn}
+
+apt:
+  preserve_sources_list: true
+  conf: |
+    Acquire::http::Proxy "${apt_proxy}";
+
+packages:
+  - curl
+  - jq
+  - plocate
 
 users:
   - default
@@ -15,14 +27,8 @@ users:
     lock_passwd: true
     ssh_authorized_keys:
     %{ for key in ssh_public_keys ~}
-    - ${key}
+      - ${key}
     %{ endfor ~}
-
-packages:
-  - nginx
-  - fail2ban
-  - python3-systemd
-  - plocate
 
 write_files:
   - path: /etc/ssh/sshd_config.d/99-hardening.conf
@@ -33,30 +39,19 @@ write_files:
       PermitRootLogin no
       PubkeyAuthentication yes
 
-  - path: /etc/fail2ban/jail.local
+  - path: /etc/cloud/templates/hosts.debian.tmpl
     owner: root:root
     permissions: "0644"
     content: |
-      [DEFAULT]
-      bantime = 10m
-      findtime = 10m
-      maxretry = 3
+      127.0.1.1 {{fqdn}} {{hostname}}
+      127.0.0.1 localhost
 
-      [sshd]
-      enabled = true
-      backend = systemd
-      port = ssh
-      filter = sshd
-      maxretry = 3
+      ${gateway_ip} ${gateway_fqdn} gateway
+      ${intern_ip} ${intern_fqdn} intern
+
+      ::1 localhost ip6-localhost ip6-loopback
+      ff02::1 ip6-allnodes
+      ff02::2 ip6-allrouters
 
 runcmd:
   - systemctl restart ssh || systemctl restart sshd
-  - systemctl enable nginx
-  - systemctl restart nginx
-  - systemctl enable fail2ban
-  - systemctl restart fail2ban
-  - updatedb
-  - |
-    IP=$(hostname -I | awk '{print $1}')
-    DATE=$(date)
-    echo "I'm Nginx @ \"$IP\" created $DATE" > /var/www/html/index.html
